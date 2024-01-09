@@ -8,14 +8,6 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <ew/shader.h>
-#include <ew/texture.h>
-#include <ew/procGen.h>
-#include <ew/transform.h>
-#include <ew/camera.h>
-#include <ew/cameraController.h>
-#include <ew/model.h>
-
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 GLFWwindow* initWindow(const char* title, int width, int height);
 void drawUI();
@@ -23,10 +15,8 @@ void drawUI();
 //Global state
 int screenWidth = 1080;
 int screenHeight = 720;
-float prevTime;
-
-ew::Camera camera;
-ew::CameraController cameraController;
+float prevFrameTime;
+float deltaTime;
 
 int main() {
 	GLFWwindow* window = initWindow("Assignment 0", screenWidth, screenHeight);
@@ -36,42 +26,42 @@ int main() {
 	glCullFace(GL_BACK);
 	glEnable(GL_DEPTH_TEST);
 
-	ew::Shader shader("assets/defaultLit.vert", "assets/defaultLit.frag");
-
-	unsigned int brickTexture = ew::loadTexture("assets/brick_color.jpg");
-	unsigned int concreteTexture = ew::loadTexture("assets/concrete_color.jpg");
-
-	//Load models
-	ew::Model suzanneModel("assets/Suzanne.obj");
-	ew::Transform suzanneTransform;
-
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
 		float time = (float)glfwGetTime();
-		float deltaTime = time - prevTime;
-		prevTime = time;
-
-		//UPDATE
-		cameraController.move(window, &camera, deltaTime);
+		deltaTime = time - prevFrameTime;
+		prevFrameTime = time;
 
 		//RENDER
-		glClearColor(0.0f,0.0f,0.0f,1.0f);
+		glClearColor(0.6f,0.8f,0.92f,1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		shader.use();
-		shader.setMat4("_ViewProjection", camera.projectionMatrix() * camera.viewMatrix());
-
-		//Draw suzanne
-		glBindTextureUnit(0, brickTexture);
-		shader.setMat4("_Model", suzanneTransform.modelMatrix());
-		suzanneModel.draw();
 
 		drawUI();
 
 		glfwSwapBuffers(window);
 	}
 	printf("Shutting down...");
+}
+
+void drawUI() {
+	ImGui_ImplGlfw_NewFrame();
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("Settings");
+	ImGui::Text("Add Controls Here!");
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	screenWidth = width;
+	screenHeight = height;
 }
 
 /// <summary>
@@ -107,26 +97,5 @@ GLFWwindow* initWindow(const char* title, int width, int height) {
 	ImGui_ImplOpenGL3_Init();
 
 	return window;
-}
-
-void drawUI() {
-	ImGui_ImplGlfw_NewFrame();
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::Begin("Settings");
-	//Add widgets here!
-	ImGui::End();
-
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
-void framebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-	glViewport(0, 0, width, height);
-	screenWidth = width;
-	screenHeight = height;
-	camera.aspectRatio = (float)screenWidth / screenHeight;
 }
 
