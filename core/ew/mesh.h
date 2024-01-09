@@ -3,14 +3,14 @@
 */
 
 #pragma once
-#include "ewMath/ewMath.h"
-#include "ewMath/vec3.h"
+#include <glm/glm.hpp>
+#include <vector>
 
 namespace ew {
 	struct Vertex {
-		ew::Vec3 pos;
-		ew::Vec3 normal;
-		ew::Vec2 uv;
+		glm::vec3 pos;
+		glm::vec3 normal;
+		glm::vec2 uv;
 	};
 
 	struct MeshData {

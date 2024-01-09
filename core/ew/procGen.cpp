@@ -5,7 +5,10 @@
 
 #include "procGen.h"
 #include <stdlib.h>
-#include "ewMath/vec3.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
+using namespace glm;
 
 namespace ew {
 	/// <summary>
@@ -14,22 +17,22 @@ namespace ew {
 	/// <param name="normal">Normal direction of the face</param>
 	/// <param name="size">Width/height of the face</param>
 	/// <param name="mesh">MeshData struct to fill</param>
-	static void createCubeFace(Vec3 normal, float size, MeshData* mesh) {
+	static void createCubeFace(vec3 normal, float size, MeshData* mesh) {
 		unsigned int startVertex = mesh->vertices.size();
-		ew::Vec3 a = Vec3(normal.z, normal.x, normal.y); //U axis
-		ew::Vec3 b = Vec3::Cross(normal, a); //V axis
+		vec3 a = vec3(normal.z, normal.x, normal.y); //U axis
+		vec3 b = cross(normal, a); //V axis
 		for (int i = 0; i < 4; i++)
 		{
 			int col = i % 2;
 			int row = i / 2;
 
-			ew::Vec3 pos = normal * size * 0.5f;
+			vec3 pos = normal * size * 0.5f;
 			pos -= (a + b) * size * 0.5f;
-			pos += (a * col + b * row) * size;
+			pos += (a * (float)col + b * (float)row) * size;
 			Vertex vertex;// = &mesh->vertices[mesh->vertices.size()];
 			vertex.pos = pos;
 			vertex.normal = normal;
-			vertex.uv = Vec2(col, row);
+			vertex.uv = glm::vec2(col, row);
 			mesh->vertices.push_back(vertex);
 		}
 
@@ -50,12 +53,12 @@ namespace ew {
 		MeshData mesh;
 		mesh.vertices.reserve(24); //6 x 4 vertices
 		mesh.indices.reserve(36); //6 x 6 indices
-		createCubeFace(ew::Vec3{ +0.0f,+0.0f,+1.0f }, size, &mesh); //Front
-		createCubeFace(ew::Vec3{ +1.0f,+0.0f,+0.0f }, size, &mesh); //Right
-		createCubeFace(ew::Vec3{ +0.0f,+1.0f,+0.0f }, size, &mesh); //Top
-		createCubeFace(ew::Vec3{ -1.0f,+0.0f,+0.0f }, size, &mesh); //Left
-		createCubeFace(ew::Vec3{ +0.0f,-1.0f,+0.0f }, size, &mesh); //Bottom
-		createCubeFace(ew::Vec3{ +0.0f,+0.0f,-1.0f }, size, &mesh); //Back
+		createCubeFace(vec3{ +0.0f,+0.0f,+1.0f }, size, &mesh); //Front
+		createCubeFace(vec3{ +1.0f,+0.0f,+0.0f }, size, &mesh); //Right
+		createCubeFace(vec3{ +0.0f,+1.0f,+0.0f }, size, &mesh); //Top
+		createCubeFace(vec3{ -1.0f,+0.0f,+0.0f }, size, &mesh); //Left
+		createCubeFace(vec3{ +0.0f,-1.0f,+0.0f }, size, &mesh); //Bottom
+		createCubeFace(vec3{ +0.0f,+0.0f,-1.0f }, size, &mesh); //Back
 		return mesh;
 	}
 	MeshData createPlane(float width, float height, int subdivisions)
@@ -73,7 +76,7 @@ namespace ew {
 				v.pos.x = -width/2 + width * v.uv.x;
 				v.pos.y = 0;
 				v.pos.z = height/2 -height * v.uv.y;
-				v.normal = ew::Vec3(0, 1, 0);
+				v.normal = vec3(0, 1, 0);
 				mesh.vertices.push_back(v);
 			}
 		}
@@ -97,8 +100,8 @@ namespace ew {
 	{
 		MeshData mesh;
 		//VERTICES
-		float thetaStep = ew::TAU / subdivisions;
-		float phiStep = ew::PI / subdivisions;
+		float thetaStep = glm::two_pi<float>() / subdivisions;
+		float phiStep = glm::pi<float>() / subdivisions;
 		for (size_t row = 0; row <= subdivisions; row++)
 		{
 			float phi = row * phiStep;
@@ -153,21 +156,21 @@ namespace ew {
 		return mesh;
 	}
 	void createCylinderRing(MeshData* meshData, float radius, int subdivisions, float y, bool sideFacing) {
-		float thetaStep = ew::TAU / subdivisions;
+		float thetaStep = two_pi<float>() / subdivisions;
 		for (size_t i = 0; i <= subdivisions; i++)
 		{
 			float theta = i * thetaStep;
 			float cosA = cosf(theta);
 			float sinA = sinf(theta);
-			ew::Vertex v;
-			v.pos = ew::Vec3(cosA * radius, y, sinA * radius);
+			Vertex v;
+			v.pos = vec3(cosA * radius, y, sinA * radius);
 			if (sideFacing) {
-				v.normal = ew::Vec3(cosA, 0, sinA);
-				v.uv = ew::Vec2((float)i / subdivisions, y > 0 ? 1 : 0);
+				v.normal = vec3(cosA, 0, sinA);
+				v.uv = vec2((float)i / subdivisions, y > 0 ? 1 : 0);
 			}
 			else {
-				v.normal = ew::Vec3(0, ew::Sign(y), 0);
-				v.uv = ew::Vec2(cosA * 0.5 + 0.5, sinA * 0.5 + 0.5);
+				v.normal = vec3(0, sign(y), 0);
+				v.uv = vec2(cosA * 0.5f + 0.5f, sinA * 0.5f + 0.5f);
 			}
 
 			meshData->vertices.push_back(v);
@@ -182,10 +185,10 @@ namespace ew {
 			const float topY = height * 0.5;
 			const float bottomY = -topY;
 
-			ew::Vertex topVertex;
-			topVertex.pos = ew::Vec3(0, topY, 0);
-			topVertex.normal = ew::Vec3(0, 1, 0);
-			topVertex.uv = ew::Vec2(0.5);
+			Vertex topVertex;
+			topVertex.pos = vec3(0, topY, 0);
+			topVertex.normal = vec3(0, 1, 0);
+			topVertex.uv = vec2(0.5f);
 			mesh.vertices.push_back(topVertex);
 
 			createCylinderRing(&mesh, radius, subdivisions, topY, false);
@@ -193,10 +196,10 @@ namespace ew {
 			createCylinderRing(&mesh, radius, subdivisions, bottomY, true);
 			createCylinderRing(&mesh, radius, subdivisions, bottomY, false);
 
-			ew::Vertex bottomVertex;
-			bottomVertex.pos = ew::Vec3(0, bottomY, 0);
-			bottomVertex.normal = ew::Vec3(0, -1, 0);
-			bottomVertex.uv = ew::Vec2(0.5);
+			Vertex bottomVertex;
+			bottomVertex.pos = vec3(0, bottomY, 0);
+			bottomVertex.normal = vec3(0, -1, 0);
+			bottomVertex.uv = vec2(0.5f);
 			mesh.vertices.push_back(bottomVertex);
 		}
 		

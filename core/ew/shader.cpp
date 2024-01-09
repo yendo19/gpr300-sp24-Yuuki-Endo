@@ -2,6 +2,8 @@
 #include <fstream>
 #include <sstream>
 #include "external/glad.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace ew {
 	/// <summary>
@@ -99,7 +101,7 @@ namespace ew {
 	{
 		glUniform2f(glGetUniformLocation(m_id, name.c_str()), x, y);
 	}
-	void Shader::setVec2(const std::string& name, const ew::Vec2& v) const
+	void Shader::setVec2(const std::string& name, const glm::vec2& v) const
 	{
 		setVec2(name, v.x, v.y);
 	}
@@ -107,7 +109,7 @@ namespace ew {
 	{
 		glUniform3f(glGetUniformLocation(m_id, name.c_str()), x, y, z);
 	}
-	void Shader::setVec3(const std::string& name, const ew::Vec3& v) const
+	void Shader::setVec3(const std::string& name, const glm::vec3& v) const
 	{
 		setVec3(name, v.x, v.y, v.z);
 	}
@@ -115,13 +117,13 @@ namespace ew {
 	{
 		glUniform4f(glGetUniformLocation(m_id, name.c_str()), x, y, z, w);
 	}
-	void Shader::setVec4(const std::string& name, const ew::Vec4& v) const
+	void Shader::setVec4(const std::string& name, const glm::vec4& v) const
 	{
 		setVec4(name, v.x, v.y, v.z, v.w);
 	}
-	void Shader::setMat4(const std::string& name, const ew::Mat4& m) const
+	void Shader::setMat4(const std::string& name, const glm::mat4& m) const
 	{
-		glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, &m[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(m));
 	}
 }
 

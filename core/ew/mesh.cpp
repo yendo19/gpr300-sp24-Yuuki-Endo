@@ -3,7 +3,6 @@
 */
 
 #include "mesh.h"
-#include "ewMath/ewMath.h"
 #include "external/glad.h"
 
 namespace ew {

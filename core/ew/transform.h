@@ -1,18 +1,20 @@
 #pragma once
-#include "ewMath/ewMath.h"
-#include "ewMath/transformations.h"
-#include "ewMath/quaternion.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace ew {
 	struct Transform {
-		ew::Vec3 position = ew::Vec3(0.0f, 0.0f, 0.0f);
-		ew::Quaternion rotation = ew::Quaternion::Identity;
-		ew::Vec3 scale = ew::Vec3(1.0f, 1.0f, 1.0f);
+		glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f);
+		glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f,0.0f);
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-		ew::Mat4 ModelMatrix() const {
-			return ew::Translate(position) 
-				* ew::ToRotationMatrix(rotation)
-				* ew::Scale(scale);
+		glm::mat4 ModelMatrix() const {
+			glm::mat4 m = glm::mat4(1.0f);
+			m = glm::scale(m, scale);
+			m *= glm::mat4_cast(rotation);
+			m = glm::translate(m, position);
+			return m;
 		}
 	};
 }

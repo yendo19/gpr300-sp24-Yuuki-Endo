@@ -2,7 +2,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include "ewMath/vec3.h"
+#include <glm/glm.hpp>
 
 namespace ew {
 	ew::Mesh ProcessAiMesh(aiMesh* aiMesh);
@@ -27,8 +27,8 @@ namespace ew {
 		}
 	}
 
-	ew::Vec3 AiVec3(const aiVector3D& v) {
-		return ew::Vec3(v.x, v.y, v.z);
+	glm::vec3 ConvertAIVec3(const aiVector3D& v) {
+		return glm::vec3(v.x, v.y, v.z);
 	}
 
 	//Utility functions local to this file
@@ -37,12 +37,13 @@ namespace ew {
 		for (size_t i = 0; i < aiMesh->mNumVertices; i++)
 		{
 			ew::Vertex vertex;
-			vertex.pos = AiVec3(aiMesh->mVertices[i]);
+			vertex.pos = ConvertAIVec3(aiMesh->mVertices[i]);
 			if (aiMesh->HasNormals()) {
-				vertex.normal = AiVec3(aiMesh->mNormals[i]);
+				vertex.normal = ConvertAIVec3(aiMesh->mNormals[i]);
 			}
 			if (aiMesh->HasTextureCoords(0)) {
-				vertex.uv = AiVec3(aiMesh->mTextureCoords[0][i]).ToVec2();
+				glm::vec3 uv = ConvertAIVec3(aiMesh->mTextureCoords[0][i]);
+				vertex.uv = glm::vec2(uv);
 			}
 			meshData.vertices.push_back(vertex);
 		}

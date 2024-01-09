@@ -31,23 +31,23 @@ namespace ew {
 			//Change yaw and pitch (degrees)
 			yaw += mouseDeltaX * mouseSensitivity;
 			pitch -= mouseDeltaY * mouseSensitivity;
-			pitch = ew::Clamp(pitch, -89.0f, 89.0f);
+			pitch = glm::clamp(pitch, -89.0f, 89.0f);
 
 		}
 		//KEYBOARD MOVEMENT
 		{
-			float yawRad = ew::Radians(yaw);
-			float pitchRad = ew::Radians(pitch);
+			float yawRad = glm::radians(yaw);
+			float pitchRad = glm::radians(pitch);
 
 			//Construct forward, right, and up vectors
-			ew::Vec3 forward;
+			glm::vec3 forward;
 			forward.x = cosf(pitchRad) * sinf(yawRad);
 			forward.y = sinf(pitchRad);
 			forward.z = cosf(pitchRad) * -cosf(yawRad);
-			forward = Vec3::Normalize(forward);
+			forward = glm::normalize(forward);
 
-			ew::Vec3 right = Vec3::Normalize(Vec3::Cross(forward, ew::Vec3(0, 1, 0)));
-			ew::Vec3 up = Vec3::Normalize(Vec3::Cross(right, forward));
+			glm::vec3 right = glm::normalize(glm::cross(forward, glm::vec3(0, 1, 0)));
+			glm::vec3 up = glm::normalize(glm::cross(right, forward));
 
 			//Keyboard movement
 			float speed = glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) ? sprintMoveSpeed : moveSpeed;
