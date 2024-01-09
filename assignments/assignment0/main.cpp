@@ -53,19 +53,19 @@ int main() {
 		prevTime = time;
 
 		//UPDATE
-		cameraController.Move(window, &camera, deltaTime);
+		cameraController.move(window, &camera, deltaTime);
 
 		//RENDER
 		glClearColor(0.0f,0.0f,0.0f,1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader.use();
-		shader.setMat4("_ViewProjection", camera.ProjectionMatrix() * camera.ViewMatrix());
+		shader.setMat4("_ViewProjection", camera.projectionMatrix() * camera.viewMatrix());
 
 		//Draw suzanne
 		glBindTextureUnit(0, brickTexture);
-		shader.setMat4("_Model", suzanneTransform.ModelMatrix());
-		suzanneModel.Draw(shader);
+		shader.setMat4("_Model", suzanneTransform.modelMatrix());
+		suzanneModel.draw();
 
 		drawUI();
 

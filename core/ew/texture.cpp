@@ -1,3 +1,7 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #include "texture.h"
 #include "external/glad.h"
 #include "external/stb_image.h"

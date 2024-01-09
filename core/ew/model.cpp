@@ -1,11 +1,16 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #include "model.h"
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
+
 #include <assimp/scene.h>
 #include <glm/glm.hpp>
 
 namespace ew {
-	ew::Mesh ProcessAiMesh(aiMesh* aiMesh);
+	ew::Mesh processAiMesh(aiMesh* aiMesh);
 
 	Model::Model(const std::string& filePath)
 	{
@@ -14,36 +19,34 @@ namespace ew {
 		for (size_t i = 0; i < aiScene->mNumMeshes; i++)
 		{
 			aiMesh* aiMesh = aiScene->mMeshes[i];
-			m_meshes.push_back(ProcessAiMesh(aiMesh));
+			m_meshes.push_back(processAiMesh(aiMesh));
 		}
 	}
 
-	void Model::Draw(const ew::Shader& shader)
+	void Model::draw()
 	{
-		shader.use();
 		for (size_t i = 0; i < m_meshes.size(); i++)
 		{
-			m_meshes[i].Draw();
+			m_meshes[i].draw();
 		}
 	}
 
-	glm::vec3 ConvertAIVec3(const aiVector3D& v) {
+	glm::vec3 convertAIVec3(const aiVector3D& v) {
 		return glm::vec3(v.x, v.y, v.z);
 	}
 
 	//Utility functions local to this file
-	ew::Mesh ProcessAiMesh(aiMesh* aiMesh) {
+	ew::Mesh processAiMesh(aiMesh* aiMesh) {
 		ew::MeshData meshData;
 		for (size_t i = 0; i < aiMesh->mNumVertices; i++)
 		{
 			ew::Vertex vertex;
-			vertex.pos = ConvertAIVec3(aiMesh->mVertices[i]);
+			vertex.pos = convertAIVec3(aiMesh->mVertices[i]);
 			if (aiMesh->HasNormals()) {
-				vertex.normal = ConvertAIVec3(aiMesh->mNormals[i]);
+				vertex.normal = convertAIVec3(aiMesh->mNormals[i]);
 			}
 			if (aiMesh->HasTextureCoords(0)) {
-				glm::vec3 uv = ConvertAIVec3(aiMesh->mTextureCoords[0][i]);
-				vertex.uv = glm::vec2(uv);
+				vertex.uv = glm::vec2(convertAIVec3(aiMesh->mTextureCoords[0][i]));
 			}
 			meshData.vertices.push_back(vertex);
 		}

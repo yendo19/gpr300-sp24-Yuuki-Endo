@@ -1,8 +1,12 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-namespace ew {
 
+namespace ew {
 	struct Camera {
 		glm::vec3 position = glm::vec3(0.0f, 0.0f, 5.0f);
 		glm::vec3 target = glm::vec3(0.0f);
@@ -14,10 +18,10 @@ namespace ew {
 		float orthoHeight = 6.0f;
 		float aspectRatio = 1.77f;
 
-		inline glm::mat4 ViewMatrix()const {
+		inline glm::mat4 viewMatrix()const {
 			return glm::lookAt(position, target, glm::vec3(0, 1, 0));
 		}
-		inline glm::mat4 ProjectionMatrix()const {
+		inline glm::mat4 projectionMatrix()const {
 
 			if (orthographic) {
 				

@@ -1,3 +1,7 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #pragma once
 
 namespace ew {

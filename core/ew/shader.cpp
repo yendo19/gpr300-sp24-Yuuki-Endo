@@ -1,3 +1,7 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #include "shader.h"
 #include <fstream>
 #include <sstream>

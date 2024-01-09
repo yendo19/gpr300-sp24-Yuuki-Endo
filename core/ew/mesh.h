@@ -1,5 +1,5 @@
 /*
-	Author: Eric Winebrenner
+*	Author: Eric Winebrenner
 */
 
 #pragma once
@@ -27,8 +27,8 @@ namespace ew {
 	public:
 		Mesh() {};
 		Mesh(const MeshData& meshData);
-		void Load(const MeshData& meshData);
-		void Draw(DrawMode drawMode = DrawMode::TRIANGLES)const;
+		void load(const MeshData& meshData);
+		void draw(DrawMode drawMode = DrawMode::TRIANGLES)const;
 		inline int getNumVertices()const { return m_numVertices; }
 		inline int getNumIndices()const { return m_numIndices; }
 	private:

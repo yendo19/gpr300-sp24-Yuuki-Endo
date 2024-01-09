@@ -1,6 +1,9 @@
 /*
 	Author: Eric Winebrenner
 */
+/*
+*	Author: Eric Winebrenner
+*/
 
 #include "mesh.h"
 #include "external/glad.h"
@@ -8,9 +11,9 @@
 namespace ew {
 	Mesh::Mesh(const MeshData& meshData)
 	{
-		Load(meshData);
+		load(meshData);
 	}
-	void Mesh::Load(const MeshData& meshData)
+	void Mesh::load(const MeshData& meshData)
 	{
 		if (!m_initialized) {
 			glGenVertexArrays(1, &m_vao);
@@ -53,7 +56,7 @@ namespace ew {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
-	void Mesh::Draw(ew::DrawMode drawMode) const
+	void Mesh::draw(ew::DrawMode drawMode) const
 	{
 		glBindVertexArray(m_vao);
 		if (drawMode == DrawMode::TRIANGLES) {

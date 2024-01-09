@@ -1,7 +1,6 @@
 /*
-	Author: Eric Winebrenner
+*	Author: Eric Winebrenner
 */
-
 
 #include "procGen.h"
 #include <stdlib.h>

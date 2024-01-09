@@ -1,3 +1,7 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #pragma once
 #include <GLFW/glfw3.h>
 #include "camera.h"
@@ -14,6 +18,6 @@ namespace ew {
 		bool firstMouse = true; //Used to get first frame mouse position
 
 		//Using input from window, aim and rotate camera
-		void Move(GLFWwindow* window, ew::Camera* camera, float deltaTime);
+		void move(GLFWwindow* window, ew::Camera* camera, float deltaTime);
 	};
 }

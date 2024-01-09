@@ -1,3 +1,7 @@
+/*
+*	Author: Eric Winebrenner
+*/
+
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -9,7 +13,7 @@ namespace ew {
 		glm::quat rotation = glm::quat(1.0f, 0.0f, 0.0f,0.0f);
 		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-		glm::mat4 ModelMatrix() const {
+		glm::mat4 modelMatrix() const {
 			glm::mat4 m = glm::mat4(1.0f);
 			m = glm::scale(m, scale);
 			m *= glm::mat4_cast(rotation);

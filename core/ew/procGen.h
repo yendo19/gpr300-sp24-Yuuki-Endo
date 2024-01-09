@@ -1,7 +1,6 @@
 /*
-	Author: Eric Winebrenner
+*	Author: Eric Winebrenner
 */
-
 
 #pragma once
 #include "mesh.h"
