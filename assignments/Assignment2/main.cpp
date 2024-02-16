@@ -12,10 +12,12 @@
 #include <imgui_impl_opengl3.h>
 #include <ew/transform.h>
 #include <ew/cameraController.h>
+#include <ew/procGen.h>
 ew::CameraController cameraController;
 
 ew::Transform monkeyTransform;
 ew::Camera camera;
+ew::Camera light;
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height);
 GLFWwindow* initWindow(const char* title, int width, int height);
@@ -50,6 +52,7 @@ int main() {
 	GLuint brickTexture = ew::loadTexture("assets/brick_color.jpg");
 	//Shader
 	ew::Shader shader = ew::Shader("assets/lit.vert", "assets/lit.frag");
+	ew::Shader depthShader = ew::Shader("assets/depthShader.vert", "assets/depthShader.frag");
 	//Model
 	ew::Model monkeyModel = ew::Model("assets/suzanne.obj");
 	//camera
@@ -57,7 +60,17 @@ int main() {
 	camera.target = glm::vec3(0.0f, 0.0f, 0.0f); //Look at the center of the scene
 	camera.aspectRatio = (float)screenWidth / screenHeight;
 	camera.fov = 60.0f; //Vertical field of view, in degrees
+
+	light.position = glm::vec3(2.0f, 1.0f, 0.0f);
+	light.target = glm::vec3(0.0, 1.0, 0.0);
+	light.aspectRatio = (float)1;
+	light.orthographic = true;
+	light.orthoHeight = 1.0f;
+
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+
+	//Plane
+	ew::Mesh planeMesh = ew::Mesh(ew::createPlane(10, 10, 5));
 
 	//Shadow Buffer
 	unsigned int depthMapFBO;
@@ -87,6 +100,7 @@ int main() {
 		deltaTime = time - prevFrameTime;
 		prevFrameTime = time;
 		shader.setVec3("_EyePos", camera.position);
+		depth
 		//RENDER
 		cameraController.move(window, &camera, deltaTime);
 		glClearColor(0.6f, 0.8f, 0.92f, 1.0f);
@@ -103,9 +117,12 @@ int main() {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		monkeyModel.draw(); //Draws monkey model using current shader
+		planeMesh.draw();
 		// reset viewport
 		glViewport(0, 0, screenWidth, screenHeight);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		depthShader.use();
 
 
 		shader.use();
@@ -123,6 +140,7 @@ int main() {
 		shader.setMat4("_Model", glm::mat4(1.0f));
 		shader.setMat4("_ViewProjection", camera.projectionMatrix() * camera.viewMatrix());
 		monkeyModel.draw(); //Draws monkey model using current shader
+		planeMesh.draw();
 
 		drawUI();
 
