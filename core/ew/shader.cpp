@@ -97,6 +97,12 @@ namespace ew {
 	{
 		glUniform1i(glGetUniformLocation(m_id, name.c_str()), v);
 	}
+
+	void Shader::setBool(const std::string & name, bool b) const
+	{
+		glUniform1i(glGetUniformLocation(m_id, name.c_str()), b);
+	}
+
 	void Shader::setFloat(const std::string& name, float v) const
 	{
 		glUniform1f(glGetUniformLocation(m_id, name.c_str()), v);
@@ -129,5 +135,8 @@ namespace ew {
 	{
 		glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(m));
 	}
+
+
+
 }
 
