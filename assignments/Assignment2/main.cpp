@@ -70,8 +70,7 @@ int main() {
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
 	//Plane
-	ew::Mesh planeMesh = ew::Mesh(ew::createPlane(10, 10, 5));
-
+	ew::Mesh planeMesh = ew::Mesh(ew::createPlane(10, 10, 1));
 	//Shadow Buffer
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
@@ -93,6 +92,11 @@ int main() {
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+
+	shader.use();
+	shader.setInt("diffuseTexture", 0);
+	shader.setInt("shadowMap", 1);
+
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
@@ -100,7 +104,7 @@ int main() {
 		deltaTime = time - prevFrameTime;
 		prevFrameTime = time;
 		shader.setVec3("_EyePos", camera.position);
-		depth
+
 		//RENDER
 		cameraController.move(window, &camera, deltaTime);
 		glClearColor(0.6f, 0.8f, 0.92f, 1.0f);
@@ -128,6 +132,7 @@ int main() {
 		shader.use();
 		shader.setInt("_MainTex", 0);
 		monkeyTransform.rotation = glm::rotate(monkeyTransform.rotation, deltaTime, glm::vec3(0.0, 1.0, 0.0));
+		monkeyTransform.position = glm::vec3(10.0f, 0.0f, 0.0f);
 		shader.setFloat("_Material.Ka", material.Ka);
 		shader.setFloat("_Material.Kd", material.Kd);
 		shader.setFloat("_Material.Ks", material.Ks);

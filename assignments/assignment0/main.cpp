@@ -75,6 +75,7 @@ int main() {
 		shader.use();
 		shader.setInt("_MainTex", 0);
 		monkeyTransform.rotation = glm::rotate(monkeyTransform.rotation, deltaTime, glm::vec3(0.0, 1.0, 0.0));
+		monkeyTransform.position = glm::vec3(10.0f, 0.0f, 0.0f);
 		shader.setFloat("_Material.Ka", material.Ka);
 		shader.setFloat("_Material.Kd", material.Kd);
 		shader.setFloat("_Material.Ks", material.Ks);
